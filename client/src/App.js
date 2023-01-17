@@ -1,24 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import ForgotPassword from './components/ForgetPassword';
+import BatchAdvisior from './components/BatchAdvisior';
+import Student from './components/Student';
+import Instructor from './components/Instructor';
+import AuthProvider, { useAuth } from './contexts/AuthContext';
+import {Routes, Route, Navigate} from 'react-router-dom'
+import SignupOtp from './components/SignupOtp';
 
 function App() {
+  const PrivateRoute = ({ children }) => {
+    const {currentUser} = useAuth() 
+    return currentUser ? children : <Navigate to="/login" />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <AuthProvider>
+        <Routes>
+          <Route path="/signup" element={<Signup/>} />
+          <Route path="/signup-otp" element={<SignupOtp/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
+          <Route path="/batch-advisior" element={<BatchAdvisior/>} />
+          <Route path="/student" element={<Student/>} />
+          <Route path="/instructor" element={<Instructor/>} />
+          {/* <Route path="/update-profile" element={<PrivateRoute><UpdateProfile/></PrivateRoute>} /> */}
+        </Routes>
+      </AuthProvider>
+    </>
   );
 }
 
