@@ -1,7 +1,9 @@
 const nodemailer = require('nodemailer');
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
+app.use(cors())
 
 const transporter = nodemailer.createTransport({
     service: 'hotmail',
@@ -18,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sendmail', (req, res) => {
-
+    res.header("Access-Control-Allow-Origin", "*")
     const otp = Math.floor(Math.random()*1000000)
 
     const mailOptions = {
@@ -41,6 +43,7 @@ app.get('/sendmail', (req, res) => {
 });
 
 app.get('/verifyotp', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*")
     const otp = req.query.otp
     const email = req.query.email
     if(otp == otpPairs[email]) { 
