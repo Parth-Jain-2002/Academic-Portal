@@ -2,6 +2,8 @@ import React, {useRef,useState} from 'react'
 import { Form, Button, Card, Alert, Container } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import { Link, useNavigate} from 'react-router-dom'
+import { db } from '../firebase'
+import { collection, addDoc } from 'firebase/firestore'
 
 
 export default function SignupOtp() {
@@ -9,7 +11,9 @@ export default function SignupOtp() {
   const passwordRef = useRef()
   const {login} = useAuth()
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loadingVerify, setLoadingVerify] = useState(true)
   const navigate = useNavigate()
 
     async function handleSubmit(e) {
@@ -27,15 +31,53 @@ export default function SignupOtp() {
     }
 
     async function sendOTP() {
-        console.log("Sending OTP")
+        setLoading(true)
+        // console.log("Sending OTP")
         const response = await fetch(`https://nodemailer-test.onrender.com/sendmail?to=${emailRef.current.value}`)
-        const data = await response.json()
-        console.log(data)
-        if(data.status == "Email Sent") {
+        const data = await response.text()
+        if(data == "Email sent") {
             console.log("Mail sent successfully")
+            setLoadingVerify(false)
+            setLoading(true)
         } else {
             console.log("Mail not sent")
+            setLoading(false)
         }
+    }
+
+    async function verifyOtp(){
+        setLoadingVerify(true)
+        console.log("Verifying OTP")
+        const response = await fetch(`https://nodemailer-test.onrender.com/verifyotp?email=${emailRef.current.value}&otp=${passwordRef.current.value}`)
+        const data = await response.text()
+        if(data == "OTP Verified") {
+            setMessage("OTP Verified")
+            setLoadingVerify(true)
+        }
+        else{
+            console.log("OTP Not Verified")
+            setLoadingVerify(false)
+        }
+    }
+
+    function createUser(){
+        console.log("Creating User")
+        
+        db.collection("authenicatedUsers").doc(emailRef.current.value).set({
+            role: document.querySelector('input[name="user-type"]:checked').value,
+        }
+        ).then(()=>{
+            const userRole = document.querySelector('input[name="user-type"]:checked').value
+            if(userRole == "instructor"){
+                navigate(`/instructor/${emailRef.current.value}`)
+            }
+            else if(userRole == "student"){
+                navigate(`/student/${emailRef.current.value}`)
+            }
+            else if(userRole == "batch-advisior"){
+                navigate("/batch-advisior")
+            }
+        })
     }
 
   return (
@@ -56,17 +98,25 @@ export default function SignupOtp() {
                         <Form.Label>OTP</Form.Label>
                         <Form.Control type="text" ref={passwordRef} required/>
                     </Form.Group>
-                    <Button disabled={loading} onClick={sendOTP}className="w-100 mt-2">
+                    <Button disabled={loading} onClick={sendOTP} className="w-100 mt-2">
                         Send OTP
                     </Button>
-                    <Button disabled={loading} className="w-100 mt-2" type="submit">
+                    <Button disabled={loadingVerify} onClick={verifyOtp} className="w-100 mt-2">
                         Verify OTP
                     </Button>
+                     {/* Radio button for selecting the type of user: instructor, student, batch-advisior */}
+                    <Form.Group id="user-type">
+                        <Form.Label>User Type</Form.Label>
+                        <Form.Check type="radio" label="Instructor" name="user-type" value="instructor" />
+                        <Form.Check type="radio" label="Student" name="user-type" value="student" />
+                        <Form.Check type="radio" label="Batch Advisior" name="user-type" value="batch-advisior" />
+                    </Form.Group>
+                    <Button className='w-100' onClick={createUser}>Create New User</Button>
                 </Form>
             </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">
-            Need an account? <Link to="/login">Login</Link>
+            Need an account? <Link to="/login-otp">Login</Link>
         </div>
         </div>
     </Container>

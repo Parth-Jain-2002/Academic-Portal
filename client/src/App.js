@@ -8,6 +8,7 @@ import Instructor from './components/Instructor';
 import AuthProvider, { useAuth } from './contexts/AuthContext';
 import {Routes, Route, Navigate} from 'react-router-dom'
 import SignupOtp from './components/SignupOtp';
+import LoginOtp from './components/LoginOtp';
 
 function App() {
   const PrivateRoute = ({ children }) => {
@@ -21,11 +22,12 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Signup/>} />
           <Route path="/signup-otp" element={<SignupOtp/>} />
+          <Route path="/login-otp" element={<LoginOtp/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/batch-advisior" element={<BatchAdvisior/>} />
-          <Route path="/student" element={<Student/>} />
-          <Route path="/instructor" element={<Instructor/>} />
+          <Route path="/student/:email" element={<Student/>} />
+          <Route path="/instructor/:email" element={<Instructor/>} />
           {/* <Route path="/update-profile" element={<PrivateRoute><UpdateProfile/></PrivateRoute>} /> */}
         </Routes>
       </AuthProvider>
