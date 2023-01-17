@@ -1,4 +1,12 @@
 {
+  "name": "nodemailer-test",
+  "version": "1.0.0",
+  "description": "nodemailer-test",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Parth Jain",
   "dependencies": {
     "express": "^4.18.2",
     "firebase": "^9.15.0",
