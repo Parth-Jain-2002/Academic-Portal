@@ -23,14 +23,12 @@ export default function BatchAdvisior() {
             courses: arrayUnion(request),
             coursesApproval: arrayRemove(request)
         })
-        await deleteDoc(requestRef)
-        console.log("Approved")
+        await deleteDoc(requestRef).then(()=>getRequests())
     }
 
     const rejectRequest = async(request) =>{
         const requestRef = doc(db,'requests',request.id)
-        await deleteDoc(requestRef)
-        console.log("Rejected")
+        await deleteDoc(requestRef).then(()=>getRequests())
     }
 
 
