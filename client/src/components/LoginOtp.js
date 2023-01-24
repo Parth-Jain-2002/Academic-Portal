@@ -15,16 +15,34 @@ export default function LoginOtp() {
   const navigate = useNavigate()
 
   async function sendOTP() {
+    setError('')
+    setMessage('')
+
+    // check if email is valid
+    const email = emailRef.current.value
+    const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
+    if(!regex.test(email)){
+        setError("Invalid Email")
+        return
+    }
+
+    // check if email is of domain @iitrpr.ac.in
+    const domain = email.split("@")[1]
+    if(domain != "iitrpr.ac.in"){
+        setError("Email must be of domain @iitrpr.ac.in")
+        return
+    }
+
     setLoading(true)
-    // console.log("Sending OTP")
+    setMessage("Sending OTP...")
     const response = await fetch(`https://nodemailer-test.onrender.com/sendmail?to=${emailRef.current.value}`)
     const data = await response.text()
     if(data == "Email sent") {
-        console.log("Mail sent successfully")
+        setMessage("Mail sent successfully")
         setLoadingVerify(false)
         setLoading(true)
     } else {
-        console.log("Mail not sent")
+        setError("Mail not sent")
         setLoading(false)
     }
    }
@@ -34,6 +52,7 @@ export default function LoginOtp() {
         
         try{
             setError('')
+            setMessage('')
             setLoading(true)
             setLoadingVerify(true)
             console.log("Verifying OTP")
@@ -65,7 +84,7 @@ export default function LoginOtp() {
                 }
             }
             else{
-                console.log("OTP Not Verified")
+                setError("OTP Not Verified")
                 setLoadingVerify(false)
             }
             // check in collection authenicatedUsers if email exists, then navigating to that particular page
@@ -84,6 +103,7 @@ export default function LoginOtp() {
             <Card.Body>
                 <h2 className="text-center mb-4">Login In</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
+                {message && <Alert variant="success">{message}</Alert>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group id="email">
                         <Form.Label>Email</Form.Label>

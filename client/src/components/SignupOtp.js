@@ -31,21 +31,40 @@ export default function SignupOtp() {
     }
 
     async function sendOTP() {
+        setError('')
+        setMessage('')
+        // check if email is valid
+        const email = emailRef.current.value
+        const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
+        if(!regex.test(email)){
+            setError("Invalid Email")
+            return
+        }
+
+        // check if email is of domain @iitrpr.ac.in
+        const domain = email.split("@")[1]
+        if(domain != "iitrpr.ac.in"){
+            setError("Email must be of domain @iitrpr.ac.in")
+            return
+        }
+
         setLoading(true)
         // console.log("Sending OTP")
         const response = await fetch(`https://nodemailer-test.onrender.com/sendmail?to=${emailRef.current.value}`)
         const data = await response.text()
         if(data == "Email sent") {
-            console.log("Mail sent successfully")
+            setMessage("Mail sent successfully")
             setLoadingVerify(false)
             setLoading(true)
         } else {
-            console.log("Mail not sent")
+            setError("Mail not sent")
             setLoading(false)
         }
     }
 
     async function verifyOtp(){
+        setError('')
+        setMessage('')
         setLoadingVerify(true)
         console.log("Verifying OTP")
         const response = await fetch(`https://nodemailer-test.onrender.com/verifyotp?email=${emailRef.current.value}&otp=${passwordRef.current.value}`)
@@ -55,13 +74,13 @@ export default function SignupOtp() {
             setLoadingVerify(true)
         }
         else{
-            console.log("OTP Not Verified")
+            setError("OTP Not Verified")
             setLoadingVerify(false)
         }
     }
 
     function createUser(){
-        console.log("Creating User")
+        setMessage("Creating User")
         
         db.collection("authenicatedUsers").doc(emailRef.current.value).set({
             role: document.querySelector('input[name="user-type"]:checked').value,
@@ -88,6 +107,7 @@ export default function SignupOtp() {
             <Card.Body>
                 <h2 className="text-center mb-4">Signup Using OTP</h2>
                 {error && <Alert variant="danger">{error}</Alert>}
+                {message && <Alert variant="success">{message}</Alert>}
                 <Form onSubmit={handleSubmit}>
                     <Form.Group id="email">
                         <Form.Label>Email</Form.Label>
