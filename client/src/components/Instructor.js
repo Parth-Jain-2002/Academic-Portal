@@ -2,6 +2,7 @@ import React, {useEffect, useRef,useState} from 'react'
 import { db } from '../firebase'
 import { collection, addDoc, arrayUnion, updateDoc, getDoc } from "firebase/firestore";
 import { useParams } from 'react-router-dom';
+import { Container, Row, Table } from 'react-bootstrap';
 
 export default function Instructor() {
     const courseName = useRef()
@@ -38,9 +39,10 @@ export default function Instructor() {
         
   return (
     <>
-    <div className="container">
-        <div className="row">
-            <div className="col-md-9 align-self-center">
+    <h5 className="display-5" align='center'> Instructor </h5>
+    <Container className='justify-content-md-center align-items-center text-center'>
+        <Row className="justify-content-md-center m-3">
+            <div className="col-md-6 align-self-center">
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Add Course</h5>
@@ -57,18 +59,18 @@ export default function Instructor() {
                                 <label for="courseDescription">Course Description</label>
                                 <input ref={courseDescription} type="text" className="form-control" id="courseDescription" placeholder="Enter Course Description" />
                             </div>
-                            <button type="submit" className="btn btn-primary">Submit</button>
+                            <button type="submit" className="btn btn-primary m-2">Submit</button>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-        <div className="row">
+        </Row>
+        <Row>
             <div className="col-md-12">
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Course List</h5>
-                        <table className="table">
+                        <Table striped bordered hover>
                             <thead>
                                 <tr>
                                     <th scope="col">Serial</th>
@@ -87,12 +89,12 @@ export default function Instructor() {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </Table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </Row>
+    </Container>
     </>                        
   )
 }

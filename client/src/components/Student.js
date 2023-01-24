@@ -1,7 +1,7 @@
 import { arrayUnion, getDocs,addDoc, updateDoc, collection, doc, getDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase'
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button, Container, Row } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 
 export default function Student() {
@@ -45,12 +45,12 @@ const enrollCourse = async(course) =>{
 
   return (
     <>
-    <div>Student</div>
-        <div className="container">
-            <div className="row">
-                <div className="col-md-12 align-self-center">
-                    <h5 className="card-title">Courses</h5>
-                    <Table>
+    <h5 className="display-5" align='center'> Student </h5>
+    <Container className='justify-content-md-center align-items-center text-center'>
+            <Row>
+                <h5 className="card-title">Courses</h5>
+                <Table striped bordered hover>
+                    <thead>
                         <tr>
                             <th scope='col'>Serial</th>
                             <th scope='col'>Course Name</th>
@@ -59,38 +59,45 @@ const enrollCourse = async(course) =>{
                             <th scope='col'>Instructor Email</th>
                             <th scope='col'>Action</th>
                         </tr>
-                        {courseData && courseData.map((course, index) => (
-                            <tr>
-                                <td scope='row'>{index+1}</td>
-                                <td>{course && course.courseName}</td>
-                                <td>{course && course.courseCode}</td>
-                                <td>{course && course.courseDescription}</td>
-                                <td>{course && course.instructorEmail}</td>
-                                <td><Button variant="success" onClick={()=>enrollCourse(course)}>Enroll</Button></td>
-                            </tr>
-                        ))}
-                    </Table>
-                    <Table>
+                    </thead>
+                    <tbody>
+                    {courseData && courseData.map((course, index) => (
                         <tr>
-                            <th scope='col'>Serial</th>
-                            <th scope='col'>Course Name</th>
-                            <th scope='col'>Course Code</th>
-                            <th scope='col'>Course Description</th>
-                            <th scope='col'>Instructor Email</th>
+                            <td scope='row'>{index+1}</td>
+                            <td>{course && course.courseName}</td>
+                            <td>{course && course.courseCode}</td>
+                            <td>{course && course.courseDescription}</td>
+                            <td>{course && course.instructorEmail}</td>
+                            <td><Button variant="success" onClick={()=>enrollCourse(course)}>Enroll</Button></td>
                         </tr>
-                        {coursesApproved && coursesApproved.map((course, index) => (
-                            <tr>
-                                <td scope='row'>{index+1}</td>
-                                <td>{course && course.courseName}</td>
-                                <td>{course && course.courseCode}</td>
-                                <td>{course && course.courseDescription}</td>
-                                <td>{course && course.instructorEmail}</td>
-                            </tr>
-                        ))}
-                    </Table>
-                </div>
-            </div>
-        </div>
+                    ))}
+                    </tbody>
+                </Table>
+                <h5 className="card-title m-2"> Enrolled Courses</h5>
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th scope='col'>Serial</th>
+                        <th scope='col'>Course Name</th>
+                        <th scope='col'>Course Code</th>
+                        <th scope='col'>Course Description</th>
+                        <th scope='col'>Instructor Email</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {coursesApproved && coursesApproved.map((course, index) => (
+                        <tr>
+                            <td scope='row'>{index+1}</td>
+                            <td>{course && course.courseName}</td>
+                            <td>{course && course.courseCode}</td>
+                            <td>{course && course.courseDescription}</td>
+                            <td>{course && course.instructorEmail}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </Table>
+            </Row>
+        </Container>
     </>
     
   )

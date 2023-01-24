@@ -1,6 +1,6 @@
 import { arrayRemove, arrayUnion, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
-import { Button, Table } from 'react-bootstrap'
+import { Button, Container, Table } from 'react-bootstrap'
 import { db } from '../firebase'
 
 export default function BatchAdvisior() {
@@ -36,20 +36,25 @@ export default function BatchAdvisior() {
 
   return (
     <>
-    <div>BatchAdvisior</div>
-    <div>Approval Requests</div>
-    <Table>
-        <tr>
-            <th scope='col'>Serial</th>
-            <th scope='col'>Course Name</th>
-            <th scope='col'>Course Code</th>
-            <th scope='col'>Instructor Email</th>
-            <th scope='col'>Student Email</th>
-            <th scope='col'>Action</th>
-        </tr>
+    <h5 className="display-5" align='center'> BatchAdvisior </h5>
+    <br/>
+    <Container className='justify-content-md-center align-items-center text-center'>
+    <h4 class="display-10 m-2"> Approval Requests </h4>
+    <Table striped bordered hover>
+        <thead>
+            <tr>
+                <th scope='col'>Serial</th>
+                <th scope='col'>Course Name</th>
+                <th scope='col'>Course Code</th>
+                <th scope='col'>Instructor Email</th>
+                <th scope='col'>Student Email</th>
+                <th scope='col'>Action</th>
+            </tr>
+        </thead>
+        <tbody>
         {requests && requests.map((request, index) => (
             <tr>
-                <td scope='row'>{index+1}</td>
+                <th scope='row'>{index+1}</th>
                 <td>{request && request.courseName}</td>
                 <td>{request && request.courseCode}</td>
                 <td>{request && request.instructorEmail}</td>
@@ -60,7 +65,9 @@ export default function BatchAdvisior() {
                 </td>
             </tr>
         ))}
+        </tbody>
     </Table>
+    </Container>
     </>
   )
 }

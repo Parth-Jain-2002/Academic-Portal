@@ -20,8 +20,8 @@ function App() {
     <>
       <AuthProvider>
         <Routes>
+          <Route path="/" element={<SignupOtp/>} />
           <Route path="/signup" element={<Signup/>} />
-          <Route path="/signup-otp" element={<SignupOtp/>} />
           <Route path="/login-otp" element={<LoginOtp/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
